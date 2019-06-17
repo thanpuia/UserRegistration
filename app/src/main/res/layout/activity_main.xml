@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Department Name"
-            android:textColor="@color/offwhite2"
+            android:textColor="@color/offwhite"
             android:textSize="33dp"
             android:gravity="center"
             android:padding="33dp"
@@ -35,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Profile"
-            android:textColor="@color/offwhite2"
+            android:textColor="@color/offwhite"
             android:textSize="33dp"
             android:gravity="center"
             android:paddingTop="33dp"
@@ -62,11 +62,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/ic_person_white_24dp"
+            android:maxLines="1"
             app:met_floatingLabel="normal"
             app:met_floatingLabelTextColor="@color/offwhite"
             app:met_floatingLabelText="Your Email"
             android:hint="   Your Email"
-            app:met_textColorHint="@color/offwhite"
+            app:met_textColorHint="@color/offwhite2"
             app:met_textColor="@color/offwhite" />
 
         <com.rengwuxian.materialedittext.MaterialEditText
@@ -78,9 +79,17 @@
             app:met_floatingLabelTextColor="@color/offwhite"
             app:met_floatingLabelText="Password"
             android:hint="   Password"
-            app:met_textColorHint="@color/offwhite"
-            app:met_textColor="@color/offwhite" />
+            app:met_textColorHint="@color/offwhite2"
+            app:met_textColor="@color/offwhite"
+            />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Forgot Password?"
+            android:gravity="right"
+            android:textColor="@color/offwhite2"
+            android:onClick="forgotPasswordClick"/>
         <Space
             android:layout_width="wrap_content"
             android:layout_height="12dp" />

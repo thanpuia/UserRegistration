@@ -1,5 +1,6 @@
 package com.lalthanpuiachhangte.userregistration;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -63,5 +64,10 @@ public class RegistrationActivity extends AppCompatActivity {
                 });
 
 
+    }
+
+    public void memberLoginClick(View view) {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 }

@@ -4,7 +4,9 @@
     <color name="colorPrimaryDark">#090C29</color>
     <color name="colorAccent">#D81B60</color>
 
-    <color name="offwhite">#8F8D8D</color>
-    <color name="offwhite2">#E4E2E2</color>
+    <color name="offwhite">#D6D6D6</color>
+    <color name="offwhitedark">#3A3939</color>
+
+    <color name="offwhite2">#8B8A8A</color>
 
 </resources>
