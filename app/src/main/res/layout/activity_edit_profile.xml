@@ -4,12 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".RegistrationActivity"
-    android:background="@drawable/bg1">
-
-
-
+    tools:context=".EditProfile">
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -28,7 +23,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="REGISTER"
+            android:text="Update"
             android:gravity="center"
             android:textSize="30dp"
             android:fontFamily="sans-serif-condensed-medium"
@@ -36,7 +31,7 @@
             />
 
         <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/usernameET"
+            android:id="@+id/usernameETEdit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Username"
@@ -48,7 +43,7 @@
             app:met_textColorHint="@color/offwhite2" />
 
         <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/passwordET"
+            android:id="@+id/passwordETEdit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Password"
@@ -60,7 +55,7 @@
             app:met_textColorHint="@color/offwhite2" />
 
         <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/phoneET"
+            android:id="@+id/phoneETEdit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Mobile Number"
@@ -72,7 +67,7 @@
             app:met_textColorHint="@color/offwhite2" />
 
         <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/emailET"
+            android:id="@+id/emailETEdit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Your Email"
@@ -88,26 +83,14 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:text="Submit"
-            android:onClick="loginClick"
+            android:onClick="loginClickEdit"
             android:background="#6A4056"
             android:layout_gravity="center"
             android:textColor="@color/offwhite"
             />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Member Login?"
-            android:textStyle="bold"
-            android:onClick="memberLoginClick"
-            android:paddingBottom="10dp"
-            android:paddingTop="5dp"/>
+
 
 
     </LinearLayout>
-
-
-
-
 </LinearLayout>

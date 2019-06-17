@@ -31,4 +31,5 @@ dependencies {
     implementation 'com.koushikdutta.ion:ion:2.+'
 
     implementation 'com.github.mohammadatif:Animatoo:master'
+    implementation 'com.jpardogo.googleprogressbar:library:1.2.0'
 }

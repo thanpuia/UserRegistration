@@ -8,6 +8,7 @@
     android:background="@drawable/bg1"
     android:orientation="vertical">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -89,7 +90,8 @@
             android:text="Forgot Password?"
             android:gravity="right"
             android:textColor="@color/offwhite2"
-            android:onClick="forgotPasswordClick"/>
+            android:onClick="forgotPasswordClick"
+            android:paddingBottom="15dp"/>
         <Space
             android:layout_width="wrap_content"
             android:layout_height="@dimen/betloginandresigter" />
@@ -123,6 +125,7 @@
                 android:textColor="@color/offwhite"
                 android:textStyle="bold"
                 android:onClick="registrationClick"
+                android:paddingBottom="30dp"
                 />
 
         </LinearLayout>
