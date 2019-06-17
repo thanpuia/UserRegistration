@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="betloginandresigter">30dp</dimen>
+    <dimen name="betloginandresigter2">20dp</dimen>
+
+    <dimen name="side">15dp</dimen>
+    <dimen name="topbottom">80dp</dimen>
+</resources>

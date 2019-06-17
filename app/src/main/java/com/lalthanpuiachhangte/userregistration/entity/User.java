@@ -9,8 +9,17 @@ public class User implements Parcelable {
     String userName;
     String password;
     String email;
+    String phone;
 
     public User() {
+    }
+
+    public User(int id, String userName, String password, String email, String phone) {
+        this.id = id;
+        this.userName = userName;
+        this.password = password;
+        this.email = email;
+        this.phone = phone;
     }
 
     protected User(Parcel in) {
@@ -18,6 +27,21 @@ public class User implements Parcelable {
         userName = in.readString();
         password = in.readString();
         email = in.readString();
+        phone = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(userName);
+        dest.writeString(password);
+        dest.writeString(email);
+        dest.writeString(phone);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<User> CREATOR = new Creator<User>() {
@@ -31,7 +55,6 @@ public class User implements Parcelable {
             return new User[size];
         }
     };
-
 
     public int getId() {
         return id;
@@ -65,16 +88,11 @@ public class User implements Parcelable {
         this.email = email;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public String getPhone() {
+        return phone;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
-        dest.writeString(userName);
-        dest.writeString(password);
-        dest.writeString(email);
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

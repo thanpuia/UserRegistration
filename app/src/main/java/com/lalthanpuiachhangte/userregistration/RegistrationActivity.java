@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import com.koushikdutta.async.future.FutureCallback;
@@ -16,7 +17,7 @@ import com.lalthanpuiachhangte.userregistration.entity.User;
 
 public class RegistrationActivity extends AppCompatActivity {
 
-    EditText username, password, email;
+    EditText username, password, email, mobile;
     User mUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +33,8 @@ public class RegistrationActivity extends AppCompatActivity {
         username = findViewById(R.id.usernameET);
         password = findViewById(R.id.passwordET);
         email = findViewById(R.id.emailET);
+        mobile = findViewById(R.id.phoneET);
+
 
         mUser = new User();
 
@@ -42,11 +45,13 @@ public class RegistrationActivity extends AppCompatActivity {
         String mUsername = username.getText().toString();
         String mPassword = password.getText().toString();
         String mEmail = email.getText().toString();
+        String mMobile = mobile.getText().toString();
 
         mUser.setUserName(mUsername);
         mUser.setPassword(mPassword);
         mUser.setEmail(mEmail);
-        mUser.setId(4);
+        mUser.setPhone(mMobile);
+        //mUser.setId(4);
 
         Log.i("TAGG",""+mUser.getUserName());
 
@@ -59,15 +64,21 @@ public class RegistrationActivity extends AppCompatActivity {
                     @Override
                     public void onCompleted(Exception e, JsonObject result) {
                         // do stuff with the result or error
-                 ;
+
                     }
                 });
-
-
     }
 
     public void memberLoginClick(View view) {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+        Animatoo.animateFade(this); //fire the slide left animation
+
+    }
+
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+        Animatoo.animateFade(this); //fire the slide left animation
     }
 }
