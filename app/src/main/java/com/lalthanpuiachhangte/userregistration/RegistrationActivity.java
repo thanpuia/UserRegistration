@@ -69,7 +69,6 @@ public class RegistrationActivity extends AppCompatActivity {
              mUserId = rand.nextInt();
         }
 
-
         mUser.setUsername(mUsername);
         mUser.setPassword(mPassword);
         mUser.setEmail(mEmail);
@@ -77,7 +76,6 @@ public class RegistrationActivity extends AppCompatActivity {
 
         //SHOW THE DIALOG BAR
         //mUser.setId(4);
-
 
         Log.i("TAGG",""+mUser.getUsername());
         if(MODE){
@@ -122,31 +120,30 @@ public class RegistrationActivity extends AppCompatActivity {
                         public void onCompleted(Exception e, JsonObject result) {
                             // do stuff with the result or error
 
-                            try{
+
                                 //REMOVE THE PROGRESS BAR
-                                if(result.equals(null)){
-                                    dismissProgressDialog();
-                                    Toasty.error(getApplicationContext(),"Server problem!",Toasty.LENGTH_SHORT).show();
-
-                                }else {
-                                    dismissProgressDialog();
-                                    Toasty.success(getApplicationContext(),"Registration successfully!",Toasty.LENGTH_SHORT).show();
-                                    startActivity(new Intent (getApplicationContext(), HomeActivity.class));
-                                }
-                            }catch (Exception df) {
-                                Toasty.error(getApplicationContext(),"Server Error or Server down!",Toasty.LENGTH_SHORT).show();
-                                dismissProgressDialog();
-
-                            }
-
-
+//                                if(result.equals(null)){
+//                                    dismissProgressDialog();
+//                                    Toasty.error(getApplicationContext(),"Server problem!",Toasty.LENGTH_SHORT).show();
+//
+//                                }else {
+//                                    dismissProgressDialog();
+//                                    Toasty.success(getApplicationContext(),"Registration successfully!",Toasty.LENGTH_SHORT).show();
+//                                    startActivity(new Intent (getApplicationContext(), HomeActivity.class));
+//                                }
+                            dismissProgressDialog();
                             //GOTO HOME if REGISTRATION SUCCESSFUL
 
                             //  Animatoo.animateFade(getApplicationContext());
                         }
                     })
-            .wait(9000);
-        }catch (Exception e){}
+            .wait(10000);//wait for 10 secs to connect to server
+        }catch (Exception e){
+            Toasty.error(getApplicationContext(),"Server Error, please try again after sometime",Toasty.LENGTH_SHORT).show();
+
+            dismissProgressDialog();
+
+        }
     }
     public void showProgressDialog(){
         progressDialog = new ProgressDialog(RegistrationActivity.this);

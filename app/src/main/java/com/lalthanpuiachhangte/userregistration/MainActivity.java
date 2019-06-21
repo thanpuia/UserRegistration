@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity {
             Toasty.error(getApplicationContext(),"Enter both fields!",Toast.LENGTH_SHORT).show();
         }else {
 
-            //CHECK THE EMAIL PATTER
+            //CHECK THE EMAIL PATTERn
             if(isEmailValid(mEmail)){
 
                 //IF BOTH FIELDS AND EMAIL PATTERN IS CORRECT SENT TO THE USER SERVER
@@ -175,8 +175,11 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                 }
                             })
-                    .wait(9000);
-                }catch (Exception e){ }
+                    .wait(10000);//wait for 10 secs to connect to server
+                }catch (Exception e){
+                    Toasty.error(getApplicationContext(),"Server is not responding, try again after sometime",Toast.LENGTH_SHORT).show();
+                    dismissProgressDialog();
+                }
             }else
                 Toasty.error(getApplicationContext(),"Email not correct",Toast.LENGTH_SHORT).show();
         }
