@@ -5,38 +5,34 @@ import android.os.Parcelable;
 
 public class User implements Parcelable {
 
-    int id;
-    String userName;
-    String password;
-    String email;
-    String phone;
+   String email;
+   String username;
+   String password;
+   String phoneno;
 
     public User() {
     }
 
-    public User(int id, String userName, String password, String email, String phone) {
-        this.id = id;
-        this.userName = userName;
-        this.password = password;
+    public User(String email, String username, String password, String phoneno) {
         this.email = email;
-        this.phone = phone;
+        this.username = username;
+        this.password = password;
+        this.phoneno = phoneno;
     }
 
     protected User(Parcel in) {
-        id = in.readInt();
-        userName = in.readString();
-        password = in.readString();
         email = in.readString();
-        phone = in.readString();
+        username = in.readString();
+        password = in.readString();
+        phoneno = in.readString();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
-        dest.writeString(userName);
-        dest.writeString(password);
         dest.writeString(email);
-        dest.writeString(phone);
+        dest.writeString(username);
+        dest.writeString(password);
+        dest.writeString(phoneno);
     }
 
     @Override
@@ -56,20 +52,20 @@ public class User implements Parcelable {
         }
     };
 
-    public int getId() {
-        return id;
+    public String getEmail() {
+        return email;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
@@ -80,19 +76,13 @@ public class User implements Parcelable {
         this.password = password;
     }
 
-    public String getEmail() {
-        return email;
+    public String getPhoneno() {
+        return phoneno;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setPhoneno(String phoneno) {
+        this.phoneno = phoneno;
     }
 
-    public String getPhone() {
-        return phone;
-    }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
 }

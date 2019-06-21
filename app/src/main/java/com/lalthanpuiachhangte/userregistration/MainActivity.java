@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.google.gson.Gson;
@@ -25,17 +26,22 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import es.dmoral.toasty.Toasty;
+
 public class MainActivity extends AppCompatActivity {
 
     //public static String mURL = "10.180.243.21";
-
-    public static String mURL = "10.180.43.5";
-
+    public static String mURL = "10.180.243.17";
     MaterialEditText loginId, password;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor prefEditor;
 
     ProgressDialog progressDialog;
+    ToggleButton toggleButton;
+    public static Boolean MODE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,9 +56,35 @@ public class MainActivity extends AppCompatActivity {
 
         loginId = findViewById(R.id.loginId);
         password = findViewById(R.id.loginPassword);
+        toggleButton = findViewById(R.id.toggleButton);
+
+
+        //*******FOR DEVELOP MENT ONLY
+
+        //false = debug ; true = operation mode
+
+        toggleButton.setChecked(false);
+        MODE = false;
+
+        toggleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(toggleButton.getText().equals("Op Mode")){
+                    MODE = true;
+                }else if(toggleButton.getText().equals("Debug Mode")){
+                    MODE = false;
+                }
+
+                Toasty.success(getApplication(),"State: "+toggleButton.getText(),Toasty.LENGTH_SHORT).show();
+            }
+        });
+
+
+        //*******DEVELOPMENT ONLY ENDS
+
 
         //INITIATING THE PROGRESS DIALOG CLASS
-
 
         //CHECK THE SHARED PREFERENCE
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -65,13 +97,14 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
            // Animatoo.animateSplit(getApplicationContext());  //fire the zoom animation
         }
-
     }
 
     public void loginClick(View view) {
 
-      //  withPassword(getApplicationContext());
-        withoutPassword();
+        if(MODE)
+            withPassword(getApplicationContext());
+        else
+            withoutPassword();
     }
 
     public void registrationClick(View view) {
@@ -84,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
     public void forgotPasswordClick(View view) {
         Intent intent = new Intent (this, ForgotPasswordActivity.class);
         startActivity(intent);
@@ -91,50 +125,63 @@ public class MainActivity extends AppCompatActivity {
        // Animatoo.animateSplit(this);  //fire the zoom animation
     }
 
+
     public void withoutPassword(){
         startActivity(new Intent(this,HomeActivity.class));
      //   Animatoo.animateSplit(this);
     }
 
+
     public void withPassword(Context context){
-        final String mUsername = loginId.getText().toString();
+        final String mEmail = loginId.getText().toString();
         final String mPassword = password.getText().toString();
-        //    Log.i("TAGG", ""+stand+ " "+asdf);
 
-        String url = "http://" + mURL + ":8080/oauth/token?grant_type=password&username=admin&password=pass";
-        // String url = "http://" + mURL + ":8080/oauth/token/";
-        //String url = "http://" + mURL + ":8080/api/add";//THIS IS SAM
+        //CHECK IF BOTH ARE FILLED
+        if (mEmail.matches("") || (mPassword.matches(""))){
+            Toasty.error(getApplicationContext(),"Enter both fields!",Toast.LENGTH_SHORT).show();
+        }else {
 
-        //SHOW THE PROGRESS BAR
-        showProgressDialog();
+            //CHECK THE EMAIL PATTER
+            if(isEmailValid(mEmail)){
 
-        try{
-            Ion.with(this)
-                    .load("POST",url)
-                    .basicAuthentication(mUsername,mPassword)
+                //IF BOTH FIELDS AND EMAIL PATTERN IS CORRECT SENT TO THE USER SERVER
+                //SHOW THE PROGRESS BAR
+                showProgressDialog();
+                String url = "http://" + mURL + ":8080/oauth/token?grant_type=password&username=admin&password=pass";
+                try{
+                    Ion.with(this)
+                            .load("POST",url)
+                            .basicAuthentication(mEmail,mPassword)
+                            .asString()
+                            .setCallback(new FutureCallback<String>() {
+                                @Override
+                                public void onCompleted(Exception e, String result) {
+                                    dismissProgressDialog();
 
-                    .asString()
+                                    try {
+                                        Log.i("TAGG",result+"");
 
-                    .setCallback(new FutureCallback<String>() {
-                        @Override
-                        public void onCompleted(Exception e, String result) {
-                            Log.i("TAGG",result+"");
-                            try {
-                                JSONObject jsonObject = new JSONObject(result);
-                                String access = jsonObject.getString("access_token");
+                                        JSONObject jsonObject = new JSONObject(result);
+                                        String access = jsonObject.getString("access_token");
 
-                                Toast.makeText(getApplicationContext(),"Login successful!",Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getApplicationContext(),"Login successful!",Toast.LENGTH_SHORT).show();
 
-                                gotoPrivate(access, mUsername, mPassword);
+                                        gotoPrivate(access, mEmail, mPassword);
 
-                            }catch (JSONException err){
-                                Log.d("Error", err.toString());
-                                Toast.makeText(getApplicationContext(),"Invalid password or username!",Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-        }catch (Exception e){ }
+                                    }catch (JSONException err){
+                                        Log.d("Error", err.toString());
+                                        Toasty.error(getApplicationContext(),"Invalid password or username or server down!",Toast.LENGTH_SHORT).show();
+
+                                    }
+                                }
+                            })
+                    .wait(9000);
+                }catch (Exception e){ }
+            }else
+                Toasty.error(getApplicationContext(),"Email not correct",Toast.LENGTH_SHORT).show();
+        }
     }
+
 
     private void gotoPrivate(String access, final String userId, final String password) {
 
@@ -179,6 +226,19 @@ public class MainActivity extends AppCompatActivity {
         if (progressDialog != null) {
             progressDialog.dismiss();
         }
+    }
+
+    /**
+     * method is used for checking valid email id format.
+     *
+     * @param email
+     * @return boolean true for valid false for invalid
+     */
+    public static boolean isEmailValid(String email) {
+        String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
+        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
     }
 
 }

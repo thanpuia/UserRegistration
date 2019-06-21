@@ -43,8 +43,9 @@
             android:maxLines="1"
             app:met_floatingLabel="normal"
             app:met_floatingLabelText="Your Username"
+
             app:met_floatingLabelTextColor="@color/offwhitedark"
-            app:met_textColor="@color/offwhite2"
+            app:met_textColor="@color/offwhitedark"
             app:met_textColorHint="@color/offwhite2" />
 
         <com.rengwuxian.materialedittext.MaterialEditText
@@ -56,19 +57,21 @@
             app:met_floatingLabel="normal"
             app:met_floatingLabelText="Password"
             app:met_floatingLabelTextColor="@color/offwhitedark"
-            app:met_textColor="@color/offwhite2"
-            app:met_textColorHint="@color/offwhite2" />
+            app:met_textColor="@color/offwhitedark"
+            app:met_textColorHint="@color/offwhite2"
+            />
 
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/phoneET"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Mobile Number"
+            android:inputType="number"
             android:maxLines="1"
             app:met_floatingLabel="normal"
             app:met_floatingLabelText="Mobile Number"
             app:met_floatingLabelTextColor="@color/offwhitedark"
-            app:met_textColor="@color/offwhite2"
+            app:met_textColor="@color/offwhitedark"
             app:met_textColorHint="@color/offwhite2" />
 
         <com.rengwuxian.materialedittext.MaterialEditText
@@ -80,7 +83,7 @@
             app:met_floatingLabel="normal"
             app:met_floatingLabelText="Your Email"
             app:met_floatingLabelTextColor="@color/offwhitedark"
-            app:met_textColor="@color/offwhite2"
+            app:met_textColor="@color/offwhitedark"
             app:met_textColorHint="@color/offwhite2" />
 
 
@@ -88,7 +91,7 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:text="Submit"
-            android:onClick="loginClick"
+            android:onClick="newRegistrationClick"
             android:background="#6A4056"
             android:layout_gravity="center"
             android:textColor="@color/offwhite"

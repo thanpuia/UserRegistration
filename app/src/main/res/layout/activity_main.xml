@@ -14,15 +14,25 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <ToggleButton
+            android:id="@+id/toggleButton"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_gravity="right"
+            android:textOff="Debug Mode"
+            android:textOn="Op Mode"
+            android:gravity="top"
+            />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-condensed-medium"
+            android:gravity="center"
+            android:padding="0dp"
             android:text="Department Name"
             android:textColor="@color/offwhite"
-            android:textSize="33dp"
-            android:gravity="center"
-            android:padding="21dp"
-            android:fontFamily="sans-serif-condensed-medium"/>
+            android:textSize="33dp" />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:layout_width="120dp"
@@ -69,7 +79,8 @@
             app:met_floatingLabelText="Your Email"
             android:hint="   Your Email"
             app:met_textColorHint="@color/offwhite2"
-            app:met_textColor="@color/offwhite" />
+            app:met_textColor="@color/offwhite"
+            android:inputType="textWebEmailAddress"/>
 
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/loginPassword"
@@ -82,6 +93,7 @@
             android:hint="   Password"
             app:met_textColorHint="@color/offwhite2"
             app:met_textColor="@color/offwhite"
+            android:inputType="textPassword"
             />
 
         <TextView
