@@ -4,41 +4,36 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Editable;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.Spinner;
 
-import com.blogspot.atifsoftwares.animatoolib.Animatoo;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.lalthanpuiachhangte.userregistration.entity.User;
 
-import java.util.Random;
-
 import es.dmoral.toasty.Toasty;
 
-import static com.lalthanpuiachhangte.userregistration.MainActivity.MODE;
+import static com.lalthanpuiachhangte.userregistration.MainActivity.isEmailValid;
 import static com.lalthanpuiachhangte.userregistration.MainActivity.mURL;
 
 public class RegistrationActivity extends AppCompatActivity {
 
     ProgressDialog progressDialog;
-    EditText username, password, email, mobile;
+    EditText username, password, email, mobile, address;
+    Spinner countryCodeSpinner;
     User mUser;
 
-    Random rand ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        try
-        {
-            this.getSupportActionBar().hide();
-        }
-        catch (NullPointerException e){}
+
+        try { this.getSupportActionBar().hide(); } catch (NullPointerException e){}
 
         setContentView(R.layout.activity_registration);
 
@@ -46,10 +41,14 @@ public class RegistrationActivity extends AppCompatActivity {
         password = findViewById(R.id.passwordET);
         email = findViewById(R.id.emailET);
         mobile = findViewById(R.id.phoneET);
+        address = findViewById(R.id.addressET);
 
+        countryCodeSpinner = findViewById(R.id.countryCodeSpinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.countrycode,android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        countryCodeSpinner.setAdapter(adapter);
 
         mUser = new User();
-        rand = new Random();
 
     }
 
@@ -58,39 +57,29 @@ public class RegistrationActivity extends AppCompatActivity {
         String mUsername = username.getText().toString();
         String mPassword = password.getText().toString();
         String mEmail = email.getText().toString();
-        String mMobile = mobile.getText().toString();
-        int mUserId;
-        try{
-             mUserId =  Integer.parseInt(String.valueOf(mobile.getText()));
+        String tempMobile = mobile.getText().toString();
+        String mAddress = address.getText().toString();
+        String countyCode = countryCodeSpinner.getSelectedItem().toString();
 
-        }catch (Exception e){
-          //put random number
-
-             mUserId = rand.nextInt();
-        }
-
-        mUser.setUsername(mUsername);
-        mUser.setPassword(mPassword);
-        mUser.setEmail(mEmail);
-        mUser.setPhoneno(mMobile);
-
-        //SHOW THE DIALOG BAR
-        //mUser.setId(4);
-
-        Log.i("TAGG",""+mUser.getUsername());
-        if(MODE){
-            if(mUsername.matches("") || mEmail.matches("") || mPassword.matches("") || mUser.equals(null)){
+        String mMobile = countyCode + tempMobile;
+        //FILL ALL THE FIELDS
+        if(mUsername.matches("") || mPassword.matches("")|| mEmail.matches("")|| mMobile.matches("")|| mAddress.matches("")){
                 Toasty.error(getApplicationContext(),"Enter all field",Toasty.LENGTH_SHORT).show();
-            }else{
-                registerToServer();
-            }
-
-        }else{
-            Toasty.info(getApplicationContext(),"Registration successfully! (debug mode)",Toasty.LENGTH_SHORT).show();
+        }else {
+                //CHECK EMAIL PATTERN
+                if(isEmailValid(mEmail)){
+                    //CHECK THE MOBILE PHONE LENGTH
+                    if(tempMobile.length() == 10){
+                        registerToServer();
+                    }else{
+                        Toasty.error(getApplicationContext(),"Phone Number should equal 10 digit",Toasty.LENGTH_SHORT).show();
+                    }
+                }else{
+                    Toasty.error(getApplicationContext(),"incorrect email type",Toasty.LENGTH_SHORT).show();
+                }
         }
-
-
     }
+
     public void memberLoginClick(View view) {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
@@ -104,47 +93,61 @@ public class RegistrationActivity extends AppCompatActivity {
       //  Animatoo.animateFade(this); //fire the slide left animation
     }
 
-
     public void registerToServer(){
+
         showProgressDialog();
 
-        //String url =  "http://" + mURL + ":8080/secure/rest/admin/add";
-        String url =  "http://" + mURL + ":8080/register";
+        String url =  "http://" + mURL + ":8080/add";
+
+        JsonObject mUser = userObjectToJsonObject();
+
         try{
             Ion.with(this)
-                    .load(url)
+                    .load("POST",url)
                     .setJsonPojoBody(mUser)
-                    .asJsonObject()
-                    .setCallback(new FutureCallback<JsonObject>() {
+                    .asString()
+                    .setCallback(new FutureCallback<String>() {
                         @Override
-                        public void onCompleted(Exception e, JsonObject result) {
+                        public void onCompleted(Exception e, String result) {
                             // do stuff with the result or error
+                            if(result.equals("Exist")){
+                                Toasty.error(getApplicationContext(), "User Name already exist!", Toasty.LENGTH_SHORT).show();
+                            }else {
+                                Toasty.success(getApplicationContext(), "Registration successful", Toasty.LENGTH_SHORT).show();
 
+                            }
 
-                                //REMOVE THE PROGRESS BAR
-//                                if(result.equals(null)){
-//                                    dismissProgressDialog();
-//                                    Toasty.error(getApplicationContext(),"Server problem!",Toasty.LENGTH_SHORT).show();
-//
-//                                }else {
-//                                    dismissProgressDialog();
-//                                    Toasty.success(getApplicationContext(),"Registration successfully!",Toasty.LENGTH_SHORT).show();
-//                                    startActivity(new Intent (getApplicationContext(), HomeActivity.class));
-//                                }
-                            dismissProgressDialog();
-                            //GOTO HOME if REGISTRATION SUCCESSFUL
+                            Log.i("TAG", result+"");
+                        dismissProgressDialog();
 
-                            //  Animatoo.animateFade(getApplicationContext());
                         }
-                    })
-            .wait(10000);//wait for 10 secs to connect to server
-        }catch (Exception e){
-            Toasty.error(getApplicationContext(),"Server Error, please try again after sometime",Toasty.LENGTH_SHORT).show();
-
-            dismissProgressDialog();
-
-        }
+                    });
+        }catch (Exception e) {
+          Toasty.error(getApplicationContext(), "Server Error, please try again after sometime", Toasty.LENGTH_SHORT).show();
+          dismissProgressDialog();
+      }
     }
+
+    public JsonObject userObjectToJsonObject(){
+
+        User mUser = new User();
+
+        String mmUsername = username.getText().toString();
+        String mmPassword = password.getText().toString();
+
+        mUser.setUsername(mmUsername);
+        mUser.setPassword(mmPassword);
+
+        //CONVERT THE USER OBJECT TO NORMAL JsonObject
+        GsonBuilder gsonMapBuilder = new GsonBuilder();
+        Gson gsonObject = gsonMapBuilder.create();
+        String jsonObj = gsonObject.toJson(mUser);
+
+        JsonObject convertedObject = new Gson().fromJson(jsonObj, JsonObject.class);
+
+        return convertedObject ;
+    }
+
     public void showProgressDialog(){
         progressDialog = new ProgressDialog(RegistrationActivity.this);
         progressDialog.setIndeterminate(true);
@@ -152,8 +155,6 @@ public class RegistrationActivity extends AppCompatActivity {
 
         progressDialog.setMessage("loading...");
         progressDialog.show();
-
-
     }
 
     public void dismissProgressDialog(){
@@ -162,6 +163,51 @@ public class RegistrationActivity extends AppCompatActivity {
             progressDialog.dismiss();
         }
     }
-
-
 }
+
+
+/*  public JSONObject jsonObject(){
+        JSONObject sampleObject = new JSONObject();
+
+        try{
+            sampleObject.put("username", username.getText().toString());
+            sampleObject.put("password", password.getText().toString());
+            sampleObject.put("active", "true");
+
+            // Role role = new Role();
+            //  role.setName("USER");
+
+
+            HashMap<String, String> map1 = new HashMap<>();
+
+            map1.put("name","USER");
+
+            ArrayList<JsonObject> list = new ArrayList<>();
+
+            JsonObject convertedObject = new Gson().fromJson(String.valueOf(map1), JsonObject.class);
+
+
+            list.add(convertedObject);
+
+//            for(HashMap<String, String> data : list) {
+//                JSONObject obj = new JSONObject(data);
+//                jsonObj.add(obj);
+//            }
+
+            JSONArray test = new JSONArray(list);
+            // JSONArray roles = new JSONArray();
+            //  roles.put(role);
+
+            //new JSONObject(map1);
+//            GsonBuilder gsonMapBuilder = new GsonBuilder();
+//            Gson gsonObject = gsonMapBuilder.create();
+//            String JSONObject = gsonObject.toJson(map1);
+
+
+            sampleObject.put("roles", test);
+            Log.i("TAG", sampleObject+"");
+            return sampleObject;
+
+        }catch (Exception e){ return  null;}
+}
+*/

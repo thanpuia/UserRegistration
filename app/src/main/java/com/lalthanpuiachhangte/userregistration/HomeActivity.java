@@ -7,15 +7,19 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
+
 import android.widget.Toast;
 
-import com.blogspot.atifsoftwares.animatoolib.Animatoo;
-import com.google.gson.Gson;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
 import com.lalthanpuiachhangte.userregistration.adapter.ImageAdapter;
+
+import es.dmoral.toasty.Toasty;
+
+import static com.lalthanpuiachhangte.userregistration.MainActivity.mURL;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -54,17 +58,55 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
+        int id = item.getItemId();
+        String shareUserId = sharedPreferences.getString("userId","");
+
+        Log.i("TAG", "username: "+ shareUserId);
+
+        String url =  "http://" + mURL + ":8080/view/"+ shareUserId;
         //noinspection SimplifiableIfStatement
         if (id == R.id.profileEdit) {
 
-            startActivity(new Intent(this,EditProfile.class));
+            //Send the user name to the server;
+            try{
+                Ion.with(this)
+                        .load("GET",url)
+                        .asString()
+                        .setCallback(new FutureCallback<String>() {
+                            @Override
+                            public void onCompleted(Exception e, String result) {
+                                // do stuff with the result or error
+
+                                Log.i("TAG","Result: "+ result);
+//                                if(result.equals("Exist")){
+//                                    Toasty.error(getApplicationContext(), "User Name already exist!", Toasty.LENGTH_SHORT).show();
+//                                }else {
+//                                    Toasty.success(getApplicationContext(), "Registration successful", Toasty.LENGTH_SHORT).show();
+//
+//                                }
+
+                                Log.i("TAG", result+"");
+                               // dismissProgressDialog();
+                                Intent intent = new Intent(getApplicationContext(), EditProfile.class);
+
+                                intent.putExtra("result", result);
+                                startActivity(intent);
+
+                            }
+                        });
+            }catch (Exception e) {
+                Toasty.error(getApplicationContext(), "Server Error, please try again after sometime", Toasty.LENGTH_SHORT).show();
+              //  dismissProgressDialog();
+            }
+
+
+
 
             return true;
+
+
+
         }else if (id == R.id.logout){
             prefEditor = sharedPreferences.edit();
 
@@ -81,7 +123,6 @@ public class HomeActivity extends AppCompatActivity {
 
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">UserRegistration</string>
+
+    <string-array name="countrycode">
+        <item>+91</item>
+        <item>+92</item>
+        <item>+93</item>
+        <item>+94</item>
+        <item>+95</item>
+        <item>+96</item>
+    </string-array>
 </resources>

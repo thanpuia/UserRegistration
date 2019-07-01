@@ -9,16 +9,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.ProgressBar;
+
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.blogspot.atifsoftwares.animatoolib.Animatoo;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
-import com.jpardogo.android.googleprogressbar.library.GoogleProgressBar;
+
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -34,7 +30,7 @@ import es.dmoral.toasty.Toasty;
 public class MainActivity extends AppCompatActivity {
 
     //public static String mURL = "10.180.243.21";
-    public static String mURL = "10.180.243.17";
+    public static String mURL = "10.180.243.25";
     MaterialEditText loginId, password;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor prefEditor;
@@ -58,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
         password = findViewById(R.id.loginPassword);
         toggleButton = findViewById(R.id.toggleButton);
 
-
         //*******FOR DEVELOP MENT ONLY
 
         //false = debug ; true = operation mode
@@ -72,8 +67,11 @@ public class MainActivity extends AppCompatActivity {
 
                 if(toggleButton.getText().equals("Op Mode")){
                     MODE = true;
+                  //  startActivity(new Intent(getApplicationContext(), testing.class));
                 }else if(toggleButton.getText().equals("Debug Mode")){
                     MODE = false;
+                  //  startActivity(new Intent(getApplicationContext(), testing.class));
+
                 }
 
                 Toasty.success(getApplication(),"State: "+toggleButton.getText(),Toasty.LENGTH_SHORT).show();
@@ -82,8 +80,6 @@ public class MainActivity extends AppCompatActivity {
 
 
         //*******DEVELOPMENT ONLY ENDS
-
-
         //INITIATING THE PROGRESS DIALOG CLASS
 
         //CHECK THE SHARED PREFERENCE
@@ -133,25 +129,25 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void withPassword(Context context){
-        final String mEmail = loginId.getText().toString();
+        final String mUsername = loginId.getText().toString();
         final String mPassword = password.getText().toString();
 
         //CHECK IF BOTH ARE FILLED
-        if (mEmail.matches("") || (mPassword.matches(""))){
+        if (mUsername.matches("") || (mPassword.matches(""))){
             Toasty.error(getApplicationContext(),"Enter both fields!",Toast.LENGTH_SHORT).show();
         }else {
 
             //CHECK THE EMAIL PATTERn
-            if(isEmailValid(mEmail)){
+            //if(!isEmailValid(mUsername)){
 
                 //IF BOTH FIELDS AND EMAIL PATTERN IS CORRECT SENT TO THE USER SERVER
                 //SHOW THE PROGRESS BAR
                 showProgressDialog();
-                String url = "http://" + mURL + ":8080/oauth/token?grant_type=password&username=admin&password=pass";
+                String url = "http://" + mURL + ":8080/oauth/token?grant_type=password&username="+ mUsername+"&password="+mPassword;
                 try{
                     Ion.with(this)
                             .load("POST",url)
-                            .basicAuthentication(mEmail,mPassword)
+                            .basicAuthentication("my-trusted-client","secret")
                             .asString()
                             .setCallback(new FutureCallback<String>() {
                                 @Override
@@ -165,8 +161,7 @@ public class MainActivity extends AppCompatActivity {
                                         String access = jsonObject.getString("access_token");
 
                                         Toast.makeText(getApplicationContext(),"Login successful!",Toast.LENGTH_SHORT).show();
-
-                                        gotoPrivate(access, mEmail, mPassword);
+                                        gotoPrivate(access, mUsername, mPassword);
 
                                     }catch (JSONException err){
                                         Log.d("Error", err.toString());
@@ -174,14 +169,14 @@ public class MainActivity extends AppCompatActivity {
 
                                     }
                                 }
-                            })
-                    .wait(10000);//wait for 10 secs to connect to server
+                            });
+
                 }catch (Exception e){
                     Toasty.error(getApplicationContext(),"Server is not responding, try again after sometime",Toast.LENGTH_SHORT).show();
                     dismissProgressDialog();
                 }
-            }else
-                Toasty.error(getApplicationContext(),"Email not correct",Toast.LENGTH_SHORT).show();
+           // }else
+                //Toasty.error(getApplicationContext(),"Email not correct",Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -205,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
 
                         Intent intent = new Intent (getApplicationContext(), HomeActivity.class);
                         startActivity(intent);
-                        Animatoo.animateSplit(getApplicationContext());  //fire the zoom animation
+                       // Animatoo.animateSplit(getApplicationContext());  //fire the zoom animation
 
                         //EXIT THE PROGRESS BAR
                         dismissProgressDialog();
@@ -238,10 +233,12 @@ public class MainActivity extends AppCompatActivity {
      * @return boolean true for valid false for invalid
      */
     public static boolean isEmailValid(String email) {
-        String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
-        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(email);
-        return matcher.matches();
+//        String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
+//        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+//        Matcher matcher = pattern.matcher(email);
+//        return matcher.matches();
+        return true;//testting
+
     }
 
 }

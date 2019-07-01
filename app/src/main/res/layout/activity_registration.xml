@@ -19,10 +19,11 @@
         android:background="#B3E9E3E3"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
-        android:layout_marginTop="80dp"
-        android:layout_marginBottom="80dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="40dp"
         android:gravity="center"
-        android:padding="15dp">
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
 
 
         <TextView
@@ -61,18 +62,30 @@
             app:met_textColorHint="@color/offwhite2"
             />
 
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/phoneET"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Mobile Number"
-            android:inputType="number"
-            android:maxLines="1"
-            app:met_floatingLabel="normal"
-            app:met_floatingLabelText="Mobile Number"
-            app:met_floatingLabelTextColor="@color/offwhitedark"
-            app:met_textColor="@color/offwhitedark"
-            app:met_textColorHint="@color/offwhite2" />
+            android:orientation="horizontal">
+
+            <Spinner
+                android:id="@+id/countryCodeSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/phoneET"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Mobile Number"
+                android:inputType="number"
+                android:maxLines="1"
+                app:met_floatingLabel="normal"
+                app:met_floatingLabelText="Mobile Number"
+                app:met_floatingLabelTextColor="@color/offwhitedark"
+                app:met_textColor="@color/offwhitedark"
+                app:met_textColorHint="@color/offwhite2" />
+
+        </LinearLayout>
+
 
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/emailET"
@@ -82,6 +95,18 @@
             android:maxLines="1"
             app:met_floatingLabel="normal"
             app:met_floatingLabelText="Your Email"
+            app:met_floatingLabelTextColor="@color/offwhitedark"
+            app:met_textColor="@color/offwhitedark"
+            app:met_textColorHint="@color/offwhite2" />
+
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/addressET"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Your Address"
+            android:maxLines="1"
+            app:met_floatingLabel="normal"
+            app:met_floatingLabelText="Your Address"
             app:met_floatingLabelTextColor="@color/offwhitedark"
             app:met_textColor="@color/offwhitedark"
             app:met_textColorHint="@color/offwhite2" />
