@@ -115,8 +115,15 @@ public class RegistrationActivity extends AppCompatActivity {
                                 Toasty.success(getApplicationContext(), "Registration successful", Toasty.LENGTH_SHORT).show();
                                 Intent intent = new Intent(getApplicationContext(),MainActivity.class);
                                 startActivity(intent);
-                            }else {
+                            }else if(result.equals("Username Exist")){
                                 Toasty.error(getApplicationContext(), "User Name already exist!", Toasty.LENGTH_SHORT).show();
+                            }else if(result.equals("Phoneno Exist")){
+                                Toasty.error(getApplicationContext(), "Phone number already exist!", Toasty.LENGTH_SHORT).show();
+                            }else if(result.equals("Email Exist")){
+                                Toasty.error(getApplicationContext(), "Email already exist!", Toasty.LENGTH_SHORT).show();
+                            }else {
+                                Toasty.error(getApplicationContext(), "Server error!", Toasty.LENGTH_SHORT).show();
+
                             }
 
                             Log.i("TAG", result+"");

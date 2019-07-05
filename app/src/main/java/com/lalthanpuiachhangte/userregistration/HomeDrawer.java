@@ -1,8 +1,12 @@
 package com.lalthanpuiachhangte.userregistration;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.v4.view.GravityCompat;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -13,14 +17,32 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.widget.Toast;
+
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
+
+import es.dmoral.toasty.Toasty;
+
+import static com.lalthanpuiachhangte.userregistration.MainActivity.mURL;
 
 public class HomeDrawer extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor prefEditor;
+    String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_drawer);
+
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
+        Intent intent = getIntent();
+        token = intent.getStringExtra("token");
+
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -60,13 +82,53 @@ public class HomeDrawer extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            final String shareUserName = sharedPreferences.getString("userId","");
+
+            Log.i("TAG", "username: "+ shareUserName);
+
+            String url =  "http://" + mURL + ":8080/view/"+ shareUserName+"?access_token="+token;
+
+
+            //Send the user name to the server;
+            try{
+                Ion.with(this)
+                        .load("GET",url)
+                        .asString()
+                        .setCallback(new FutureCallback<String>() {
+                            @Override
+                            public void onCompleted(Exception e, String result) {
+                                // do stuff with the result or error
+
+                                Log.i("TAG","Result: "+ result);
+                                Log.i("TAG","Token: "+ token);
+                                Log.i("TAG","shareUsername: "+ shareUserName);
+
+                                Log.i("TAG", result+"");
+                                // dismissProgressDialog();
+                                Intent intent = new Intent(getApplicationContext(), EditProfile.class);
+
+                                intent.putExtra("result", result);
+                                intent.putExtra("token", token);
+                                startActivity(intent);
+
+                            }
+                        });
+            }catch (Exception e) {
+                Toasty.error(getApplicationContext(), "Server Error, please try again after sometime", Toasty.LENGTH_SHORT).show();
+                //  dismissProgressDialog();
+            }
+
+
+
+            startActivity(new Intent(this, EditProfile.class));
+
+
+
             return true;
         }
 
@@ -90,6 +152,18 @@ public class HomeDrawer extends AppCompatActivity
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
+            prefEditor = sharedPreferences.edit();
+
+            //SAVE THE USER CREDENTIALS
+            //prefEditor.putString("username",username);
+            prefEditor.putString("userId","");
+            prefEditor.putString("password","");
+            prefEditor.commit();
+            Toast.makeText(getApplicationContext(),"Log out successfully!",Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            startActivity(intent);
+            // Animatoo.animateWindmill(v.getContext()); //fire the slide left animation
+            finish();
 
         }
 

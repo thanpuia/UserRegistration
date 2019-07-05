@@ -2,6 +2,8 @@ package com.lalthanpuiachhangte.userregistration;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,6 +34,9 @@ public class EditProfile extends AppCompatActivity {
     String mUsername, mPassword, mEmail, mPhoneno;
     String newUsername,oldPassword, newPassword, newEmail, newPhone;
 
+    SharedPreferences sharedPreferences;
+    SharedPreferences.Editor prefEditor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +48,7 @@ public class EditProfile extends AppCompatActivity {
         phone = findViewById(R.id.phoneETEdit);
         newPasswordet = findViewById(R.id.newpasswordETEdit);
 
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         intent =getIntent();
         token = intent.getStringExtra("token");
@@ -83,6 +89,7 @@ public class EditProfile extends AppCompatActivity {
 
         newPassword = newPasswordet.getText().toString();
 
+
         if(newPassword.matches(""))
             withoutPassword(mSerialNumber, newUsername, newEmail, newPhone );
         else
@@ -118,8 +125,23 @@ public class EditProfile extends AppCompatActivity {
                             //TODO: result return hi enge
                             if(result.equals("user updated successfully...")) {
                                 Toasty.success(getApplicationContext(), "Update Successfull!", Toasty.LENGTH_SHORT).show();
-                            }else
+                                sharedPreferences.edit().putString("userId", newUsername).commit();
+
+                            }else if(result.equals("Username already exist")){
+                                Toasty.error(getApplicationContext(), "Username already exist", Toasty.LENGTH_SHORT).show();
+
+                            }else if(result.equals("Phoneno already exist")){
+                                Toasty.error(getApplicationContext(), "Phone number already exist", Toasty.LENGTH_SHORT).show();
+
+                            }else if(result.equals("Email already exist")){
+                                Toasty.error(getApplicationContext(), "Email already exist", Toasty.LENGTH_SHORT).show();
+
+                            }else {
                                 Toasty.error(getApplicationContext(), "Server problem!", Toasty.LENGTH_SHORT).show();
+                            }
+
+
+
 
 
                             dismissProgressDialog();
@@ -138,9 +160,7 @@ public class EditProfile extends AppCompatActivity {
         //Convert all the require data to JSONOBJECT
 
         JsonObject myJsonObject = myJsonObjected(sr,un, em,ph, oldpass);
-
         Log.i("TAG","SerialNo:"+myJsonObject.get("id")+"  Name:"+myJsonObject.get("username"));
-
         String url =  "http://" + mURL + ":8080/changePass/"+ newpass +"?access_token="+token;
         //upload to server
         try{
@@ -154,11 +174,24 @@ public class EditProfile extends AppCompatActivity {
 
                             Log.i("TAG",result);
                             //TODO: result return hi enge
-                            if(result.equals("Password updated successfully")) {
+                            if(result.equals("user updated successfully...")) {
                                 Toasty.success(getApplicationContext(), "Update Successfull!", Toasty.LENGTH_SHORT).show();
-                            }else
-                                Toasty.error(getApplicationContext(), "Server problem!", Toasty.LENGTH_SHORT).show();
+                                sharedPreferences.edit().putString("userId", newUsername).commit();
 
+                            }else if(result.equals("Username already exist")){
+                                Toasty.error(getApplicationContext(), "Username already exist", Toasty.LENGTH_SHORT).show();
+
+                            }else if(result.equals("Phoneno already exist")){
+                                Toasty.error(getApplicationContext(), "Phone number already exist", Toasty.LENGTH_SHORT).show();
+
+                            }else if(result.equals("Email already exist")){
+                                Toasty.error(getApplicationContext(), "Email already exist", Toasty.LENGTH_SHORT).show();
+
+                            }else if(result.equals("Password not match")) {
+                                Toasty.error(getApplicationContext(), "Password not match", Toasty.LENGTH_SHORT).show();
+                            }else {
+                                Toasty.error(getApplicationContext(), "Server problem!", Toasty.LENGTH_SHORT).show();
+                            }
 
                             dismissProgressDialog();
 

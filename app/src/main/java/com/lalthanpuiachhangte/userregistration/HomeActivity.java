@@ -108,12 +108,7 @@ public class HomeActivity extends AppCompatActivity {
               //  dismissProgressDialog();
             }
 
-
-
-
             return true;
-
-
 
         }else if (id == R.id.logout){
             prefEditor = sharedPreferences.edit();

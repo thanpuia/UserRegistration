@@ -164,7 +164,6 @@ public class MainActivity extends AppCompatActivity {
                                         }else{
                                             dismissProgressDialog();
                                             Toasty.error(getApplicationContext(),"Server is not responding, try again after sometime",Toast.LENGTH_SHORT).show();
-
                                         }
 
 
