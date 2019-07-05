@@ -12,12 +12,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme2">
-        <activity android:name=".testActivity.testing"></activity>
-        <activity android:name=".EditProfile" />
+        <activity
+            android:name=".HomeDrawer"
+            android:label="@string/title_activity_home_drawer"
+            android:theme="@style/AppTheme2.NoActionBar"></activity>
+        <activity android:name=".ChangePassword" />
+        <activity android:name=".testActivity.testing" />
+        <activity
+            android:name=".EditProfile"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".ForgotPasswordActivity" />
-        <activity android:name=".RegistrationActivity" />
+        <activity
+            android:name=".RegistrationActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".HomeActivity" />
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

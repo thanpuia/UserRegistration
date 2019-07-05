@@ -30,7 +30,7 @@ import es.dmoral.toasty.Toasty;
 public class MainActivity extends AppCompatActivity {
 
     //public static String mURL = "10.180.243.21";
-    public static String mURL = "10.180.243.25";
+    public static String mURL = "10.180.243.19";
     MaterialEditText loginId, password;
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor prefEditor;
@@ -71,13 +71,10 @@ public class MainActivity extends AppCompatActivity {
                 }else if(toggleButton.getText().equals("Debug Mode")){
                     MODE = false;
                   //  startActivity(new Intent(getApplicationContext(), testing.class));
-
                 }
-
                 Toasty.success(getApplication(),"State: "+toggleButton.getText(),Toasty.LENGTH_SHORT).show();
             }
         });
-
 
         //*******DEVELOPMENT ONLY ENDS
         //INITIATING THE PROGRESS DIALOG CLASS
@@ -88,11 +85,11 @@ public class MainActivity extends AppCompatActivity {
         String shareUserId = sharedPreferences.getString("userId","");
         String sharedPassword = sharedPreferences.getString("password","");
 
-        if(!shareUserId.equals("") && !sharedPassword.equals("")){
-            Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-            startActivity(intent);
-           // Animatoo.animateSplit(getApplicationContext());  //fire the zoom animation
-        }
+//        if(!shareUserId.equals("") && !sharedPassword.equals("")){
+//            Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+//            startActivity(intent);
+//           // Animatoo.animateSplit(getApplicationContext());  //fire the zoom animation
+//        }
     }
 
     public void loginClick(View view) {
@@ -110,9 +107,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
        // Animatoo.animateSplit(this);  //fire the zoom animation
 
-
     }
-
 
     public void forgotPasswordClick(View view) {
         Intent intent = new Intent (this, ForgotPasswordActivity.class);
@@ -123,8 +118,10 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void withoutPassword(){
-        startActivity(new Intent(this,HomeActivity.class));
-     //   Animatoo.animateSplit(this);
+      //  startActivity(new Intent(this,HomeActivity.class));
+        startActivity(new Intent(this,HomeDrawer.class));
+
+        //   Animatoo.animateSplit(this);
     }
 
 
@@ -152,20 +149,29 @@ public class MainActivity extends AppCompatActivity {
                             .setCallback(new FutureCallback<String>() {
                                 @Override
                                 public void onCompleted(Exception e, String result) {
-                                    dismissProgressDialog();
 
                                     try {
-                                        Log.i("TAGG",result+"");
+                                        if(result != null) {//result khi a null in catch ah a kal mai lo thin a
+                                            Log.i("TAGG",result+"");
 
-                                        JSONObject jsonObject = new JSONObject(result);
-                                        String access = jsonObject.getString("access_token");
+                                            JSONObject jsonObject = new JSONObject(result);
+                                            String access = jsonObject.getString("access_token");
 
-                                        Toast.makeText(getApplicationContext(),"Login successful!",Toast.LENGTH_SHORT).show();
-                                        gotoPrivate(access, mUsername, mPassword);
+                                            Toast.makeText(getApplicationContext(),"Login successful!",Toast.LENGTH_SHORT).show();
+                                            dismissProgressDialog();
+
+                                            gotoPrivate(access, mUsername, mPassword);
+                                        }else{
+                                            dismissProgressDialog();
+                                            Toasty.error(getApplicationContext(),"Server is not responding, try again after sometime",Toast.LENGTH_SHORT).show();
+
+                                        }
+
 
                                     }catch (JSONException err){
                                         Log.d("Error", err.toString());
                                         Toasty.error(getApplicationContext(),"Invalid password or username or server down!",Toast.LENGTH_SHORT).show();
+                                        dismissProgressDialog();
 
                                     }
                                 }
@@ -181,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void gotoPrivate(String access, final String userId, final String password) {
+    private void gotoPrivate(final String access, final String userId, final String password) {
 
         String url = "http://" + mURL + ":8080/private?access_token="+access;
         Ion.with(this)
@@ -198,7 +204,9 @@ public class MainActivity extends AppCompatActivity {
                         prefEditor.putString("password",password);
                         prefEditor.commit();
 
-                        Intent intent = new Intent (getApplicationContext(), HomeActivity.class);
+                       // Intent intent = new Intent (getApplicationContext(), HomeActivity.class);
+                        Intent intent = new Intent (getApplicationContext(), HomeDrawer.class);
+                        intent.putExtra("token", access);
                         startActivity(intent);
                        // Animatoo.animateSplit(getApplicationContext());  //fire the zoom animation
 

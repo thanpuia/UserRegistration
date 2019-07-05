@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -17,7 +17,9 @@
         android:layout_marginTop="80dp"
         android:layout_marginBottom="80dp"
         android:gravity="center"
-        android:padding="15dp">
+        android:padding="15dp"
+        android:transcriptMode="alwaysScroll"
+        >
 
 
         <TextView
@@ -28,6 +30,7 @@
             android:textSize="30dp"
             android:fontFamily="sans-serif-condensed-medium"
             android:textColor="#80445E"
+
             />
 
         <com.rengwuxian.materialedittext.MaterialEditText
@@ -39,7 +42,7 @@
             app:met_floatingLabel="normal"
             app:met_floatingLabelText="Your Username"
             app:met_floatingLabelTextColor="@color/offwhitedark"
-            app:met_textColor="@color/offwhite2"
+            app:met_textColor="@color/offwhitedark"
             app:met_textColorHint="@color/offwhite2" />
 
         <com.rengwuxian.materialedittext.MaterialEditText
@@ -51,9 +54,20 @@
             app:met_floatingLabel="normal"
             app:met_floatingLabelText="Password"
             app:met_floatingLabelTextColor="@color/offwhitedark"
-            app:met_textColor="@color/offwhite2"
+            app:met_textColor="@color/offwhitedark"
             app:met_textColorHint="@color/offwhite2" />
 
+        <com.rengwuxian.materialedittext.MaterialEditText
+            android:id="@+id/newpasswordETEdit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="New Password"
+            android:maxLines="1"
+            app:met_floatingLabel="normal"
+            app:met_floatingLabelText="Password"
+            app:met_floatingLabelTextColor="@color/offwhitedark"
+            app:met_textColor="@color/offwhitedark"
+            app:met_textColorHint="@color/offwhite2" />
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/phoneETEdit"
             android:layout_width="match_parent"
@@ -63,7 +77,7 @@
             app:met_floatingLabel="normal"
             app:met_floatingLabelText="Mobile Number"
             app:met_floatingLabelTextColor="@color/offwhitedark"
-            app:met_textColor="@color/offwhite2"
+            app:met_textColor="@color/offwhitedark"
             app:met_textColorHint="@color/offwhite2" />
 
         <com.rengwuxian.materialedittext.MaterialEditText
@@ -75,7 +89,7 @@
             app:met_floatingLabel="normal"
             app:met_floatingLabelText="Your Email"
             app:met_floatingLabelTextColor="@color/offwhitedark"
-            app:met_textColor="@color/offwhite2"
+            app:met_textColor="@color/offwhitedark"
             app:met_textColorHint="@color/offwhite2" />
 
 
@@ -88,9 +102,11 @@
             android:layout_gravity="center"
             android:textColor="@color/offwhite"
             />
-
-
-
-
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="80dp" />
+        
     </LinearLayout>
-</LinearLayout>
+    
+
+</ScrollView>

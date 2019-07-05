@@ -25,11 +25,14 @@ public class HomeActivity extends AppCompatActivity {
 
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor prefEditor;
+    String token;
     private Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Intent intent = getIntent();
+        token = intent.getStringExtra("token");
         setContentView(R.layout.activity_home);
         // Attaching the layout to the toolbar object
         toolbar = (Toolbar) findViewById(R.id.tool_bar);
@@ -38,9 +41,9 @@ public class HomeActivity extends AppCompatActivity {
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
-        ViewPager mViewPager = findViewById(R.id.viewPage);
-        ImageAdapter adapter = new ImageAdapter(this);
-        mViewPager.setAdapter(adapter);
+      //  ViewPager mViewPager = findViewById(R.id.viewPage);
+      //  ImageAdapter adapter = new ImageAdapter(this);
+      //  mViewPager.setAdapter(adapter);
 
     }
     @Override
@@ -60,11 +63,11 @@ public class HomeActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
-        String shareUserId = sharedPreferences.getString("userId","");
+        final String shareUserName = sharedPreferences.getString("userId","");
 
-        Log.i("TAG", "username: "+ shareUserId);
+        Log.i("TAG", "username: "+ shareUserName);
 
-        String url =  "http://" + mURL + ":8080/view/"+ shareUserId;
+        String url =  "http://" + mURL + ":8080/view/"+ shareUserName+"?access_token="+token;
         //noinspection SimplifiableIfStatement
         if (id == R.id.profileEdit) {
 
@@ -79,6 +82,10 @@ public class HomeActivity extends AppCompatActivity {
                                 // do stuff with the result or error
 
                                 Log.i("TAG","Result: "+ result);
+                                Log.i("TAG","Token: "+ token);
+                                Log.i("TAG","shareUsername: "+ shareUserName);
+
+
 //                                if(result.equals("Exist")){
 //                                    Toasty.error(getApplicationContext(), "User Name already exist!", Toasty.LENGTH_SHORT).show();
 //                                }else {
@@ -91,6 +98,7 @@ public class HomeActivity extends AppCompatActivity {
                                 Intent intent = new Intent(getApplicationContext(), EditProfile.class);
 
                                 intent.putExtra("result", result);
+                                intent.putExtra("token", token);
                                 startActivity(intent);
 
                             }

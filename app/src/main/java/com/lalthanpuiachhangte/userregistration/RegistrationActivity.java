@@ -28,6 +28,7 @@ public class RegistrationActivity extends AppCompatActivity {
     EditText username, password, email, mobile, address;
     Spinner countryCodeSpinner;
     User mUser;
+    String mUsername, mPassword,mEmail,tempMobile,mAddress,countryCode, mPhone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,16 +55,16 @@ public class RegistrationActivity extends AppCompatActivity {
 
     public void newRegistrationClick(View view) {
 
-        String mUsername = username.getText().toString();
-        String mPassword = password.getText().toString();
-        String mEmail = email.getText().toString();
-        String tempMobile = mobile.getText().toString();
-        String mAddress = address.getText().toString();
-        String countyCode = countryCodeSpinner.getSelectedItem().toString();
+        mUsername = username.getText().toString();
+        mPassword = password.getText().toString();
+        mEmail = email.getText().toString();
+        tempMobile = mobile.getText().toString();
+        mAddress = address.getText().toString();
+        countryCode = countryCodeSpinner.getSelectedItem().toString();
 
-        String mMobile = countyCode + tempMobile;
+        mPhone = countryCode + tempMobile;
         //FILL ALL THE FIELDS
-        if(mUsername.matches("") || mPassword.matches("")|| mEmail.matches("")|| mMobile.matches("")|| mAddress.matches("")){
+        if(mUsername.matches("") || mPassword.matches("")|| mEmail.matches("")|| mPhone.matches("")|| mAddress.matches("")){
                 Toasty.error(getApplicationContext(),"Enter all field",Toasty.LENGTH_SHORT).show();
         }else {
                 //CHECK EMAIL PATTERN
@@ -110,11 +111,12 @@ public class RegistrationActivity extends AppCompatActivity {
                         @Override
                         public void onCompleted(Exception e, String result) {
                             // do stuff with the result or error
-                            if(result.equals("Exist")){
-                                Toasty.error(getApplicationContext(), "User Name already exist!", Toasty.LENGTH_SHORT).show();
-                            }else {
+                            if(result.equals("user added successfully...")){
                                 Toasty.success(getApplicationContext(), "Registration successful", Toasty.LENGTH_SHORT).show();
-
+                                Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                                startActivity(intent);
+                            }else {
+                                Toasty.error(getApplicationContext(), "User Name already exist!", Toasty.LENGTH_SHORT).show();
                             }
 
                             Log.i("TAG", result+"");
@@ -132,11 +134,11 @@ public class RegistrationActivity extends AppCompatActivity {
 
         User mUser = new User();
 
-        String mmUsername = username.getText().toString();
-        String mmPassword = password.getText().toString();
 
-        mUser.setUsername(mmUsername);
-        mUser.setPassword(mmPassword);
+        mUser.setUsername(mUsername);
+        mUser.setPassword(mPassword);
+        mUser.setPhoneno(mPhone);
+        mUser.setEmail(mEmail);
 
         //CONVERT THE USER OBJECT TO NORMAL JsonObject
         GsonBuilder gsonMapBuilder = new GsonBuilder();
